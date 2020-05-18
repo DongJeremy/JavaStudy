@@ -9,8 +9,8 @@ spring:
   mvc:
     static-path-pattern: /**
   datasource:
-    url: jdbc:postgresql://192.168.1.90:5432/postgres
-    username: postgres
+    url: jdbc:postgresql://192.168.1.90:5432/mydb
+    username: admin
     password: password
     driver-class-name: org.postgresql.Driver
     type: com.alibaba.druid.pool.DruidDataSource

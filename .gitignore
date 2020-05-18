@@ -19,6 +19,8 @@
 *.tar.gz
 *.rar
 
+bin/
+build/
 **/bin/*
 **/build/*
 
