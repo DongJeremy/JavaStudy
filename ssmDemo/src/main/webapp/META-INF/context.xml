@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource auth="Container" 
+        driverClassName="com.mysql.jdbc.Driver" 
+        name="jdbc/Datasource" 
+        type="javax.sql.DataSource" 
+        url="jdbc:mysql://mysql-server:3306/mydb?characterEncoding=UTF-8" 
+        username="cloud"
+        password="passwd" />
+    <Manager>
+    </Manager>
+</Context>

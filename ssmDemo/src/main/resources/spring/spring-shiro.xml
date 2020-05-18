@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <description>Shiro Configuration</description>
+
+  <!-- 加载配置属性文件
+  <context:property-placeholder location="file:${catalina.home}/conf/application.properties"/>-->
+  <context:property-placeholder location="classpath:jdbc.properties" />
+
+  <bean id="projectProperties" class="org.cloud.ssm.common.bean.ProjectProperties">
+    <property name="captchaOpen" value="${project.captchaOpen}" />
+  </bean>
+
+  <!-- 安全管理器 -->
+  <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+    <property name="realm" ref="userRealm" />
+    <property name="cacheManager" ref="cacheManager" />
+    <property name="sessionManager" ref="sessionManager" />
+  </bean>
+
+  <!-- session manager -->
+  <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+    <property name="globalSessionTimeout" value="1800000" />
+    <property name="sessionValidationInterval" value="1800000" />
+    <property name="sessionIdUrlRewritingEnabled" value="false" />
+    <property name="sessionDAO" ref="redisSessionDAO" />
+    <property name="sessionIdCookie">
+      <bean class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg name="name" value="shiro.sesssion" />
+        <property name="path" value="/" />
+      </bean>
+    </property>
+  </bean>
+
+  <!-- Redis cache manager -->
+  <bean id="cacheManager" class="org.crazycake.shiro.RedisCacheManager">
+    <property name="redisManager" ref="redisManager" />
+    <property name="expire" value="600" />
+    <property name="principalIdFieldName" value="id" />
+  </bean>
+
+  <!-- Redis session DAO -->
+  <bean id="redisSessionDAO" class="org.crazycake.shiro.RedisSessionDAO">
+    <property name="redisManager" ref="redisManager" />
+    <property name="expire" value="1800" />
+    <property name="sessionInMemoryEnabled" value="false" />
+  </bean>
+
+  <!-- Redis Manager -->
+  <bean id="redisManager" class="org.crazycake.shiro.RedisManager">
+    <property name="host" value="${redis.host}:${redis.port}" />
+  </bean>
+
+  <!-- Realm实现 -->
+  <bean id="userRealm" class="org.cloud.ssm.common.security.CustomRealm">
+    <constructor-arg name="cacheManager" ref="cacheManager" />
+    <constructor-arg name="matcher" ref="credentialsMatcher" />
+    <property name="authenticationCachingEnabled" value="true" />
+    <property name="authenticationCacheName" value="authenticationCache" />
+    <property name="authorizationCacheName" value="authorizationCache" />
+  </bean>
+
+  <bean name="defaultHashService" class="org.apache.shiro.crypto.hash.DefaultHashService">
+    <property name="hashAlgorithmName" value="SHA-512" />
+    <property name="hashIterations" value="500000" />
+    <property name="generatePublicSalt" value="true" />
+  </bean>
+
+  <bean name="defaultPasswordService" class="org.apache.shiro.authc.credential.DefaultPasswordService">
+    <property name="hashService" ref="defaultHashService" />
+  </bean>
+
+  <bean name="credentialsMatcher" class="org.apache.shiro.authc.credential.PasswordMatcher">
+    <property name="passwordService" ref="defaultPasswordService" />
+  </bean>
+
+  <!-- Shiro的Web过滤器 -->
+  <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+    <!-- Shiro的安全管理器，所有关于安全的操作都会经过SecurityManager -->
+    <property name="securityManager" ref="securityManager" />
+    <!-- 系统认证提交地址，如果用户退出即session丢失就会访问这个页面 -->
+    <property name="loginUrl" value="/login" />
+    <!-- 权限验证失败跳转的页面，需要配合Spring的ExceptionHandler异常处理机制使用 -->
+    <property name="unauthorizedUrl" value="/unauth" />
+    <!-- 自定义的过滤器链，从上向下执行，一般将/**放到最下面 -->
+    <property name="filterChainDefinitions">
+      <value>
+        <!-- 静态资源不拦截 -->
+        /static/** = anon
+        /webjars/** = anon
+        <!-- 登录页面不拦截 -->
+        /login = anon
+        <!-- /**表示所有请求，表示访问该地址的用户是身份验证通过或RememberMe登录的都可以 -->
+        /admin/** = authc
+      </value>
+    </property>
+  </bean>
+
+  <!-- Shiro生命周期处理器-->
+  <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+</beans>
