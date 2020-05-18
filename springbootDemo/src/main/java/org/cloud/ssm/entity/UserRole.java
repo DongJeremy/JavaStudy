@@ -6,15 +6,15 @@ public class UserRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Long id;
-    private String memberId;
+    private String userId;
     private String roleId;
 
     public Long getId() {
         return id;
     }
 
-    public String getMemberId() {
-        return memberId;
+    public String getUserId() {
+        return userId;
     }
 
     public String getRoleId() {
@@ -25,8 +25,8 @@ public class UserRole implements Serializable {
         this.id = id;
     }
 
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public void setRoleId(String roleId) {
@@ -35,6 +35,6 @@ public class UserRole implements Serializable {
 
     @Override
     public String toString() {
-        return "UserRole{" + "id=" + id + ", memberId='" + memberId + '\'' + ", roleId='" + roleId + '\'' + '}';
+        return "UserRole{" + "id=" + id + ", userId='" + userId + '\'' + ", roleId='" + roleId + '\'' + '}';
     }
 }

@@ -1,12 +1,12 @@
 buildscript {
     repositories {
-        maven {
-            url = "http://192.168.1.200:8081/repository/maven-public/"
-            credentials {
-                username 'admin'
-                password 'admin123'
-            }
-        }
+        //maven {
+        //    url = "http://192.168.1.200:8081/repository/maven-public/"
+        //    credentials {
+        //        username 'admin'
+        //        password 'admin123'
+        //    }
+        //}
         maven{ 
             url "http://maven.aliyun.com/nexus/content/groups/public"
         }
@@ -16,7 +16,7 @@ buildscript {
     }
 }
 
-def SpringVersion = '5.2.5.RELEASE'
+def SpringVersion = '5.2.2.RELEASE'
 
 apply plugin: 'java'
 apply plugin: 'war'
@@ -29,13 +29,13 @@ targetCompatibility = 1.11
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
-    maven {
-        url = "http://192.168.1.200:8081/repository/maven-public/"
-        credentials {
-            username 'admin'
-            password 'admin123'
-        }
-    }
+    //maven {
+    //    url = "http://192.168.1.200:8081/repository/maven-public/"
+    //    credentials {
+    //        username 'admin'
+    //        password 'admin123'
+    //    }
+    //}
     maven{ 
         url "http://maven.aliyun.com/nexus/content/groups/public"
     }

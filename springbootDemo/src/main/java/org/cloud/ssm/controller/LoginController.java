@@ -22,6 +22,7 @@ public class LoginController {
     public Map<String, Object> login(@RequestParam(required = true) String username,
             @RequestParam(required = true) String password) {
         Map<String, Object> user = userService.findUserByUserName(username, password);
+        System.out.println(user);
         return user;
     }
 

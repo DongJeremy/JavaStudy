@@ -24,7 +24,7 @@
     INSERT INTO t_employee (id,name,address,age)
     VALUES (DEFAULT,#{name},#{address},#{age})
   </insert>
-  
+
   <select id="getEmployee" resultMap="employeeMap">
     SELECT *
     FROM t_employee
