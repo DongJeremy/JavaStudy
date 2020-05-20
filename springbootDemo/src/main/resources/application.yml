@@ -9,10 +9,10 @@ spring:
   mvc:
     static-path-pattern: /**
   datasource:
-    url: jdbc:postgresql://192.168.1.90:5432/mydb
-    username: admin
-    password: password
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:mysql://192.168.1.90:3306/mydb?useSSL=false&characterEncoding=UTF8
+    username: cloud
+    password: passwd
+    driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       initial-size: 8
@@ -31,20 +31,36 @@ spring:
       filters: stat
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       use-global-data-source-stat: true
-  #ThymeLeaf配置
+  redis:
+    host: 192.168.1.90
+    port: 6379
+    jedis:
+      pool:
+        max-idle: 8
+        min-idle: 0
+        max-active: 8
+        max-wait: -1
+    timeout: 0
+
   thymeleaf:
     mode: HTML
-    suffix:  .html
+    suffix: .html
     encoding: UTF-8
     cache: false
-    prefix: classpath:/templates
+    prefix: classpath:/templates/
     servlet:
       content-type: text/html
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
 
 mybatis:
   config-location: classpath:mybatis-config.xml
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: org.cloud.ssm.entity
+  type-aliases-package: org.cloud.ssm.system.model
 
 logging:
   config: classpath:log4j2.xml

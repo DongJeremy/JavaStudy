@@ -60,28 +60,36 @@ targetCompatibility = 1.11
 dependencies {
     implementation 'org.springframework.boot:spring-boot-dependencies:2.2.2.RELEASE'
     implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-aop"
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
-    implementation "org.springframework.boot:spring-boot-starter-security"
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.apache.logging.log4j:log4j-web:2.12.1'
-    
-    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
-    compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0'
-    compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.0'
-    compile group: 'javax.activation', name: 'activation', version: '1.1.1'
 
-    //implementation 'mysql:mysql-connector-java:5.1.49'
-    implementation 'org.postgresql:postgresql:42.2.12'
-    implementation 'com.alibaba:druid-spring-boot-starter:1.1.22'
-    implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.2.13'
+    implementation 'org.apache.shiro:shiro-spring-boot-web-starter:1.5.3'
+    implementation 'org.crazycake:shiro-redis:3.2.3'
+    implementation 'com.github.theborakompanioni:thymeleaf-extras-shiro:2.0.0'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.2'
+    implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.2.13'
+    implementation 'com.alibaba:druid-spring-boot-starter:1.1.22'
 
-    implementation 'org.jasypt:jasypt:1.9.3'
+    implementation 'mysql:mysql-connector-java:5.1.49'
+    //implementation 'org.postgresql:postgresql:42.2.12'
     implementation 'org.apache.commons:commons-lang3:3.10'
     implementation 'commons-fileupload:commons-fileupload:1.4'
-    implementation 'com.alibaba:fastjson:1.2.68'
-    implementation 'com.auth0:java-jwt:3.10.3'
-    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'com.github.oshi:oshi-core:5.0.2'
+
+    // poi
+    implementation 'org.apache.poi:poi:4.1.2'
+    implementation 'org.apache.poi:poi-ooxml:4.1.2'
+
+    // webjars
+    implementation 'org.webjars:webjars-locator:0.40'
+    implementation 'org.webjars:jquery:3.4.1'
+    implementation 'org.webjars:font-awesome:4.7.0'
+    implementation 'org.webjars:layui:2.5.6'
+    implementation 'org.webjars:bootstrap:3.4.1'
+    implementation 'org.webjars:echarts:4.6.0'
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation 'junit:junit:4.12'

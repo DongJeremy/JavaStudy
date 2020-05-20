@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+    <meta name="renderer" content="webkit" />
+    <link rel="icon" th:href="@{/static/favicon.ico}" type="image/x-icon" />
+    <title>用户管理</title>
+    <link rel="stylesheet" th:href="@{/webjars/layui/css/layui.css}" />
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/zadmin.css}">
+    <link rel="stylesheet" th:href="@{/static/css/common.css}">
+    <link rel="stylesheet" th:href="@{/static/css/animate.min.css}">
+</head>
+<body class="animated fadeIn timo-layout-page">
+    <div class="page-loading">
+        <div class="rubik-loader"></div>
+    </div>
+    <div class="animated fadeIn layui-card">
+        <div class="layui-card-header timo-card-header">
+            <span><i class="fa fa-bars"></i> 用户管理</span>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-row timo-card-screen put-row">
+                <div class="pull-right screen-btn-group">
+                    <div class="pull-left layui-form-pane timo-search-box">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">部门</label>
+                            <div class="layui-input-block timo-search-status">
+                                <select class="timo-search-select" th:filed="${emp?.deptName}" th:value="${emp?.deptName}" name="deptId" lay-verify="tips" >
+                                    <option value="">请选择</option>
+                                    <option th:each="dept:${deptList}" th:value="${dept.id}" th:text="${dept.title}" 
+                                        th:selected="${dept.id eq emp?.deptId}" ></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">用户名</label>
+                            <div class="layui-input-block">
+                                <input id="dataReload" name="id" value="" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn timo-search-btn" id="searchBtn" data-type="reload">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="btn-group-right">
+                        <button class="layui-btn open-popup" id="add_btn"><i class="fa fa-plus"></i> 添加</button>
+                        <button class="layui-btn open-popup" data-type="getCheckData" id="del_btn"><i class="fa fa-trash"></i> 删除</button>
+                    </div>
+                </div>
+            </div>
+            <div class="timo-table-wrap">
+                <table class="layui-hide timo-table" id="user-table" lay-filter="allAttr"></table>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/html" id="column-toolbar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+    </script>
+
+    <script type="text/html" id="statusTpl">
+        <input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="在职|离职" lay-filter="status" {{ d.status == '1' ? 'checked' : '' }}>
+    </script>
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/layui/layui.js}"></script>
+    <script th:src="@{/static/js/common.js}"></script>
+
+    <script>
+    layui.use(['table', 'element', 'form'], function () {
+        var table = layui.table
+        , $ = layui.$
+        , form = layui.form;
+
+        table.render({
+            elem: '#user-table'
+            , url: '/api/emp/list'
+            , page: true
+            , id: 'userTable'
+            , limits:[10,20,50]
+            , cols: [
+                [
+                    {checkbox: true}
+                    , {field: 'id', title: 'ID', width: "10%", hide: true}
+                    , {field: 'username', title: '用户名', width: "15%"}
+                    , {field: 'deptName', title: '部门', width: "15%"}
+                    , {field: 'email', title: '邮箱', width: "15%"}
+                    , {field: 'tel', title: '手机', width: "15%"}
+                    , {field: 'status', title: '状态', templet: "#statusTpl", width: "15%"}
+                    , {title: '操作', fixed: 'right', align: 'center', toolbar: '#column-toolbar'}
+                ]
+            ]
+        });
+            
+        $("#searchBtn").on("click",function(){
+            var dataReload = $('#dataReload')
+            , deptId = $('.timo-search-select');
+            var index = layer.msg('查询中，请稍后...', {icon: 16, time: false, shade: 0});
+            setTimeout(function() {
+                table.reload('userTable', {
+                    page: {
+                        curr: 1
+                    }
+                    , where: {
+                        deptname: deptId.val()
+                        , username: dataReload.val()
+                    }
+                });
+                layer.close(index);
+            }, 800);
+        });
+
+        // 账号状态(正常/锁定)点击事件
+        form.on('switch(status)', function(data){
+            if (data.elem.checked) {
+                ajaxJsonRequest("POST", '/api/emp/' + data.value + '/enable', null, function (data) {
+                    handlerResult(data, enableDone)
+                });
+            } else {
+                ajaxJsonRequest("POST", '/api/emp/' + data.value + '/disable', null, function (data) {
+                    handlerResult(data, disableDone)
+                });
+            }
+        });
+            
+        $("#add_btn").on("click",function(){
+            layer.open({
+                content: "/admin/empChangeView",
+                title: "新增用户",
+                area: ['500px', '480px'],
+                type: 2,
+                maxmin: true,
+                shadeClose: true,
+                end: function () {
+                    table.reload('userTable');
+                }
+            });
+        });
+            
+        $("#del_btn").on("click",function(){
+            var checkStatus = table.checkStatus('userTable')
+            ,checkData = checkStatus.data;
+            if (checkData.length === 0) {
+                return layer.msg('请选择数据');
+            }
+            layer.confirm('确定删除吗?', function (index) {
+                var reqBody = checkData.reduce(function(acc, cur) {
+                    acc.push(cur.id);
+                    return acc;
+                }, []);
+                ajaxJsonRequest("POST", '/api/emp/delete',  JSON.stringify(reqBody), function (data) {
+                    layer.close(index);
+                    handlerResult(data, deleteDone)
+                });
+            });
+        });
+
+        // 行点击事件 重置密码
+        table.on('tool', function (obj) {
+            var data = obj.data;
+            var event = obj.event;
+            if (event === 'edit') {
+                edit(data.id);
+            } else if (event === 'del') {
+                del(obj);
+            }
+        });
+
+        function disableDone(data) {
+            parent.layer.msg("禁用成功", {icon: 6});
+        }
+
+        function enableDone(data) {
+            parent.layer.msg("激活成功", {icon: 6});
+        }
+
+        function edit(id) {
+            layer.open({
+                content: '/admin/empChangeView/' + id,
+                title: "编辑",
+                area: ['500px', '450px'],
+                type: 2,
+                maxmin: true,
+                shadeClose: true,
+                end: function () {
+                    table.reload('userTable');
+                }
+            });
+        }
+
+        function del(obj) {
+            layer.confirm("确定删除用户吗?", {icon: 3, title: '提示'}, function (index) {//确定回调
+                var id = obj.data.id;
+                ajaxJsonRequest("DELETE", '/api/emp/' + id, null, function (data) {
+                    layer.close(index);
+                    handlerResult(data, deleteDone)
+                });
+            }, function (index) {//取消回调
+                layer.close(index);
+            });
+        }
+
+        function deleteDone(data) {
+            parent.layer.msg("删除成功", {icon: 6});
+            table.reload('userTable', {});
+        }
+    });
+    </script>
+</body>
+</html>

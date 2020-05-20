@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.cloud.ssm.system.mapper.MenuMapper">
+
+  <resultMap type="Menu" id="menuMap">
+    <id column="menu_id1" property="menuId" />
+    <result column="menu_name1" property="menuName" />
+    <result column="url1" property="url" />
+    <result column="icon1" property="icon" />
+    <collection property="children" ofType="Menu">
+      <id column="menu_id2" property="menuId" />
+      <id column="menu_name2" property="menuName" />
+      <id column="url2" property="url"  />
+      <id column="icon2" property="icon" />
+    </collection>
+  </resultMap>
+
+  <select id="getMenuList" resultMap="menuMap">
+    SELECT 
+      A.menu_id AS menu_id1, 
+      A.parent_id AS parent_id1, 
+      A.menu_name AS menu_name1, 
+      A.icon AS icon1,
+      A.url AS url1,
+      B.menu_id AS menu_id2,
+      B.menu_name AS menu_name2, 
+      B.url AS url2,
+      B.icon AS icon2
+    FROM
+      (SELECT * FROM `t_menu` WHERE parent_id=0) AS A
+    INNER JOIN
+      (SELECT * FROM `t_menu` WHERE parent_id in (SELECT menu_id FROM `t_menu` WHERE parent_id=0)) AS B 
+    ON A.menu_id=B.parent_id AND B.level &lt;= #{level}
+    ORDER BY A.menu_id,B.menu_id
+  </select>
+
+</mapper>

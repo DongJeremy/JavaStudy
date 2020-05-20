@@ -7,7 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("org.cloud.ssm.mapper")
+@MapperScan("org.cloud.ssm.system.mapper")
 public class App {
     private final static Logger logger = LoggerFactory.getLogger("o.c.s.Main");
 

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>部门管理</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
+<link rel="icon" type="image/x-icon" th:href="@{/static/favicon.ico}" />
+<link rel="stylesheet" th:href="@{/webjars/layui/css/layui.css}" />
+<link rel="stylesheet" th:href="@{/webjars/font-awesome/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/static/css/zadmin.css}">
+<link rel="stylesheet" th:href="@{/static/css/common.css}">
+<link rel="stylesheet" th:href="@{/static/css/animate.min.css}">
+</head>
+
+<style>
+.icon {
+	width: 1em;
+	height: 1em;
+	vertical-align: -0.15em;
+	fill: currentColor;
+	overflow: hidden;
+}
+
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+}
+
+div {
+	-moz-box-sizing: border-box; /*Firefox3.5+*/
+	-webkit-box-sizing: border-box; /*Safari3.2+*/
+	-o-box-sizing: border-box; /*Opera9.6*/
+	-ms-box-sizing: border-box; /*IE8*/
+	box-sizing: border-box;
+	/*W3C标准(IE9+，Safari5.1+,Chrome10.0+,Opera10.6+都符合box-sizing的w3c标准语法)*/
+}
+
+.x-nav {
+	padding: 0 20px;
+	position: relative;
+	z-index: 99;
+	line-height: 39px;
+	border-bottom: 1px solid #e5e5e5;
+	height: 39px;
+	overflow: hidden;
+}
+
+.layui-btn-xstree {
+	height: 35px;
+	line-height: 35px;
+	padding: 0 5px;
+	font-size: 12px;
+}
+
+.layui-table-body {
+	overflow-x: hidden;
+}
+/* 去掉表格内容超出的提示*/
+.layui-table-tips-main {
+	display: none
+}
+
+.layui-table-tips-c {
+	display: none
+}
+
+.layui-table-grid-down {
+	display: none
+}
+
+.layui-table-view .layui-table {
+	width: 100%
+}
+</style>
+
+<body class="animated fadeIn timo-layout-page">
+    <div class="page-loading">
+        <div class="rubik-loader"></div>
+    </div>
+
+    <div class="animated fadeIn layui-card">
+        <div class="layui-card-header timo-card-header">
+            <span><i class="fa fa-bars"></i> 部门管理</span>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-row timo-card-screen put-row">
+                <div class="pull-right screen-btn-group">
+                    <div class="btn-group-left">
+                        <button class="layui-btn open-popup" id="add_btn">
+                            <i class="fa fa-plus"></i> 添加
+                        </button>
+                        <button class="layui-btn open-popup" data-type="getCheckData" id="del_btn">
+                            <i class="fa fa-trash"></i> 删除
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="timo-table-wrap">
+                <table class="layui-hide timo-table" id="dept-table" lay-filter="allAttr"></table>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/html" id="column-toolbar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/layui/layui.js}"></script>
+    <script th:src="@{/static/js/common.js}"></script>
+
+    <script>
+    layui.config({
+        base : '/static/js/'
+    }).use([ 'jquery', 'layer', 'table', 'element' ], function() {
+        var layer = layui.layer
+        , table = layui.table;
+
+        table.render({
+            elem : '#dept-table'
+            , url : '/api/dept/list'
+            , cellMinWidth : 80
+            , page : true
+            , id : 'deptTable'
+            , limits : [ 10, 20, 50 ]
+            , cols : [ [ 
+                { checkbox : true }
+                , { field : 'id', title : 'ID', hide : true }
+                , { field : 'title', title : '名称' }
+                , { field : 'description', title : '描述' }
+                , { title : '操作', align : 'center', toolbar : '#column-toolbar' } ]
+            ]
+        });
+
+        $("#add_btn").on("click", function() {
+            layer.open({
+                content : "/admin/deptChangeView",
+                title : "新增部门",
+                area : [ '500px', '260px' ],
+                type : 2,
+                maxmin : true,
+                shadeClose : true,
+                end : function() {
+                    table.reload('deptTable');
+                }
+            });
+        });
+
+        $("#del_btn").on("click", function() {
+            var checkStatus = table.checkStatus('deptTable')
+            , checkData = checkStatus.data;
+            if (checkData.length === 0) {
+                return layer.msg('请选择数据');
+            }
+            layer.confirm('确定删除吗?', function(index) {
+                var reqBody = checkData.reduce(function(acc, cur) {
+                    acc.push(cur.id);
+                    return acc;
+                }, []);
+                ajaxJsonRequest("POST", '/api/dept/delete', JSON.stringify(reqBody), function(data) {
+                    layer.close(index);
+                    handlerResult(data, function() {
+                        parent.layer.msg("删除成功", {icon: 6});
+                        table.reload('deptTable');
+                    });
+                });
+            });
+        });
+
+        table.on('tool', function(obj) {
+            var data = obj.data;
+            var event = obj.event;
+            if (event === 'edit') {
+                layer.open({
+                    content : '/admin/deptChangeView/' + data.id,
+                    title : "编辑",
+                    area : [ '500px', '260px' ],
+                    type : 2,
+                    maxmin : true,
+                    shadeClose : true,
+                    end : function() {
+                        table.reload('deptTable');
+                    }
+                });
+            } else if (event === 'del') {
+                layer.confirm("你确定删除数据吗？", {
+                    icon : 3,
+                    title : '提示'
+                }, function(index) {
+                    var id = obj.data.id;
+                    ajaxJsonRequest("DELETE", '/api/dept/' + data.id, null, function(data) {
+                        layer.close(index);
+                        handlerResult(data, function() {
+                            parent.layer.msg("删除成功", {icon: 6});
+                            table.reload('deptTable');
+                        });
+                    });
+                }, function(index) {
+                    layer.close(index);
+                });
+            }
+        });
+    });
+    </script>
+</body>
+
+</html>
