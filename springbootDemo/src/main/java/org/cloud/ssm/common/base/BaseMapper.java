@@ -3,6 +3,7 @@ package org.cloud.ssm.common.base;
 import java.util.List;
 
 public interface BaseMapper<T> {
+
     Long selectCount(T entity);
 
     T selectByPrimaryKey(Long id);

@@ -18,4 +18,8 @@ public interface UserMapper extends BaseMapper<User> {
 
     void updatePasswordByUserId(@Param("id") Long id, @Param("password") String encryptPassword);
 
+    User selectUserInfoByUsername(@Param("username") String username);
+
+    void updateUserInfoByPrimaryKey(User user);
+
 }

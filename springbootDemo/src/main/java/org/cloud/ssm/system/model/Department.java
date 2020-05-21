@@ -3,21 +3,21 @@ package org.cloud.ssm.system.model;
 import java.io.Serializable;
 import java.util.List;
 
-public class Dept implements Serializable {
+public class Department implements Serializable {
 
     private static final long serialVersionUID = 3270682253504566850L;
     private Long id;
-    private String title;
+    private String name;
     private String description;
-    
-    private List<Emp> emps;
-    
-    public List<Emp> getEmps() {
-        return emps;
+
+    private List<Employee> employees;
+
+    public List<Employee> getEmployees() {
+        return employees;
     }
 
-    public void setEmps(List<Emp> emps) {
-        this.emps = emps;
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 
     public Long getId() {
@@ -28,12 +28,12 @@ public class Dept implements Serializable {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -44,20 +44,24 @@ public class Dept implements Serializable {
         this.description = description;
     }
 
-    public Dept() {
+    public Department() {
         super();
     }
 
-    public Dept(Long id, String title, String description) {
+    public Department(Long id) {
         super();
         this.id = id;
-        this.title = title;
+    }
+
+    public Department(Long id, String name, String description) {
+        super();
+        this.id = id;
+        this.name = name;
         this.description = description;
     }
 
     @Override
     public String toString() {
-        return title;
+        return name;
     }
-
 }

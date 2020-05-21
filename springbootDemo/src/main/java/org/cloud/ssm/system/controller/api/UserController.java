@@ -1,4 +1,4 @@
-package org.cloud.ssm.system.controller;
+package org.cloud.ssm.system.controller.api;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class UserController {
         userService.forceLogout(sessionId);
         return ResultBean.success();
     }
-    
+
     @OperationLog("获取用户列表")
     @GetMapping("/list")
     @ResponseBody
@@ -95,8 +95,11 @@ public class UserController {
     @OperationLog("重置密码")
     @PostMapping("/{id}/reset")
     @ResponseBody
-    public ResultBean resetPassword(@PathVariable("id") Long id, String password) {
-        userService.updatePasswordByUserId(id, password);
+    public ResultBean resetPassword(@PathVariable("id") Long id, String original, String password) {
+        boolean resetPass = userService.updatePasswordByUserId(id, original, password);
+        if (!resetPass) {
+            return ResultBean.error("原密码错误，重置密码失败");
+        }
         return ResultBean.success();
     }
 }

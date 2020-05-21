@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.github.pagehelper.PageHelper;
 
 public class BaseServiceImpl<M extends BaseMapper<T>, T> implements BaseService<T> {
-
     @Autowired
     private M mapper;
 

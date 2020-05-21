@@ -1,17 +1,18 @@
-package org.cloud.ssm.system.controller;
+package org.cloud.ssm.system.controller.page;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.cloud.ssm.common.annotation.OperationLog;
 import org.cloud.ssm.common.info.Server;
-import org.cloud.ssm.system.model.Dept;
-import org.cloud.ssm.system.model.Emp;
-import org.cloud.ssm.system.service.IDeptService;
-import org.cloud.ssm.system.service.IEmpService;
+import org.cloud.ssm.common.util.ShiroUtil;
+import org.cloud.ssm.system.model.User;
+import org.cloud.ssm.system.service.IMenuService;
+import org.cloud.ssm.system.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,15 +22,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-
     @Resource
-    private IEmpService empService;
+    private IMenuService service;
 
-    @Resource
-    private IDeptService deptService;
+    @Autowired
+    private IUserService userService;
 
-    @OperationLog("访问我的桌面")
-    @GetMapping("/welcome")
+    @GetMapping(value = { "/", "/main" })
+    public String index(ModelMap model) {
+        model.addAttribute("menus", service.getTreeData(5));
+        return "admin/index";
+    }
+
+    @GetMapping("/home")
     public String welcome(ModelMap model) {
         model.addAttribute("userCount", 2);
         model.addAttribute("roleCount", 2);
@@ -37,10 +42,9 @@ public class AdminController {
         model.addAttribute("loginLogCount", 51);
         model.addAttribute("sysLogCount", 478);
         model.addAttribute("userOnlineCount", 2);
-        return "admin/welcome";
+        return "admin/home";
     }
 
-    @OperationLog("查看近七日登录统计图")
     @GetMapping("/weekLoginCount")
     @ResponseBody
     public List<Integer> recentlyWeekLoginCount() {
@@ -55,7 +59,6 @@ public class AdminController {
         return recentlyWeekLoginCount;
     }
 
-    @OperationLog("查看系统信息")
     @GetMapping("/systemInfo")
     public String serverInfo(ModelMap model) throws Exception {
         Server server = new Server();
@@ -64,40 +67,31 @@ public class AdminController {
         return "admin/system/sysinfo-list";
     }
 
-    @OperationLog("获取用户列表")
-    @GetMapping("/empView")
-    public String empListView(ModelMap model) throws Exception {
-        model.addAttribute("deptList", deptService.getAll());
-        return "admin/emp/emp-list";
+    @GetMapping("/syslog")
+    public String syslog(ModelMap model) throws Exception {
+        return "admin/system/syslog-list";
     }
 
-    @GetMapping("/empChangeView/{id}")
-    public String empUpdatePage(ModelMap model, @PathVariable("id") Long id) throws Exception {
-        model.addAttribute("emp", empService.getById(id).orElse(new Emp()));
-        model.addAttribute("deptList", deptService.getAll());
-        return "admin/emp/emp-add";
+    @GetMapping("/temp")
+    public String temp(ModelMap model) throws Exception {
+        return "admin/temp";
     }
 
-    @GetMapping("/empChangeView")
-    public String empAddPage(ModelMap model) throws Exception {
-        model.addAttribute("deptList", deptService.getAll());
-        return "admin/emp/emp-add";
+    /**
+     * 跳转到个人信息页面
+     */
+    @GetMapping("/userInfo")
+    public String toUserInfo(Model model) {
+        User user = ShiroUtil.getSubject();
+        model.addAttribute("user", userService.findUserInfoByUsername(user.getUsername()));
+        return "admin/user/user-info";
     }
 
-    @GetMapping("/deptView")
-    public String deptListView(ModelMap model) throws Exception {
-        return "admin/dept/dept-list";
-    }
-
-    @GetMapping("/deptChangeView/{id}")
-    public String deptUpdatePage(ModelMap model, @PathVariable("id") Long id) throws Exception {
-        model.addAttribute("dept", deptService.getById(id).orElse(new Dept()));
-        return "admin/dept/dept-add";
-    }
-
-    @GetMapping("/deptChangeView")
-    public String deptAddPage(ModelMap model) throws Exception {
-        return "admin/dept/dept-add";
+    @GetMapping("/editpass")
+    public String editPassword(ModelMap model) {
+        User user = ShiroUtil.getSubject();
+        model.addAttribute("id", user.getId());
+        return "admin/user/edit-passwd";
     }
 
     @GetMapping("/userOnline")
@@ -105,19 +99,9 @@ public class AdminController {
         return "admin/user/user-online-list";
     }
 
-    @GetMapping("/syslog")
-    public String syslog(ModelMap model) throws Exception {
-        return "admin/system/syslog-list";
-    }
-
     @GetMapping("/userView")
     public String userView(ModelMap model) throws Exception {
         return "admin/user/user-list";
-    }
-    
-    @GetMapping("/temp")
-    public String temp(ModelMap model) throws Exception {
-        return "admin/temp";
     }
 
     @GetMapping("/user/{id}/reset")

@@ -1,24 +1,13 @@
-package org.cloud.ssm.system.controller;
+package org.cloud.ssm.system.controller.page;
 
 import javax.annotation.Resource;
 
-import org.cloud.ssm.system.service.IMenuService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.context.WebApplicationContext;
 
-@Controller
+@Controller("indexController")
 public class IndexController {
-
-    @Resource
-    private IMenuService service;
-
-    @GetMapping(value = { "/admin", "/admin/main" })
-    public String index(ModelMap model) {
-        model.addAttribute("menus", service.getTreeData(5));
-        return "admin/index";
-    }
 
     @Resource
     private WebApplicationContext applicationContext;

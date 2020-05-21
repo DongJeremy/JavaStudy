@@ -1,4 +1,4 @@
-package org.cloud.ssm.system.controller;
+package org.cloud.ssm.system.controller.api;
 
 import java.util.List;
 
@@ -40,6 +40,5 @@ public class SysLogController {
         sysLogService.clearLogs();
         return ResultBean.success();
     }
-
 
 }

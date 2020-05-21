@@ -11,9 +11,8 @@ layui.define(['jquery','layer','form'], function(exports) {
 		layer = layui.layer,
 		form = layui.form;
 
-	layui.link('/lib/layui/extend/dtree.css');
-	layui.link('/lib/layui/extend/font/dtreefont.css');
-
+	//layui.link('/lib/layui/extend/dtree.css');
+	//layui.link('/lib/layui/extend/font/dtreefont.css');
 	// 树的公共定义样式汇总
 	var LI_NAV_CHILD = "dtree-nav-ul-sid", LI_NAV_ITEM = "dtree-nav-item",
 		LI_DIV_ITEM = "dtree-nav-div",  DTREEFONTSPECIAL="dtreefont-special",

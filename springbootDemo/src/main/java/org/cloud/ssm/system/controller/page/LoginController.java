@@ -1,4 +1,4 @@
-package org.cloud.ssm.system.controller;
+package org.cloud.ssm.system.controller.page;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,19 +15,17 @@ import org.cloud.ssm.common.util.ResultBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/admin")
 public class LoginController extends BaseController {
 
     /**
      * GET 登录
      * @return
      */
-    @GetMapping("/login")
+    @GetMapping("/admin/login")
     @CsrfToken(create = true)
     public String login() {
         logger.debug("GET请求登录");
@@ -44,7 +42,7 @@ public class LoginController extends BaseController {
      * @param password 密码
      * @return {Object}
      */
-    @PostMapping("/login")
+    @PostMapping("/admin/login")
     @CsrfToken(remove = true)
     @ResponseBody
     public Object loginPost(HttpServletRequest request, HttpServletResponse response, String username, String password,
@@ -77,7 +75,7 @@ public class LoginController extends BaseController {
      * 
      * @return {String}
      */
-    @GetMapping("/unauth")
+    @GetMapping("/admin/unauth")
     public String unauth() {
         if (SecurityUtils.getSubject().isAuthenticated() == false) {
             return "redirect:/login";

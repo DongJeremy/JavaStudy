@@ -161,9 +161,27 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     }
 
     @Override
-    public void updatePasswordByUserId(Long id, String password) {
-        String encryptPassword = PasswordUtils.generatePassword(password);
+    public boolean updatePasswordByUserId(Long id, String password0, String password1) {
+        User u = userMapper.selectByPrimaryKey(id);
+        if (u == null)
+            return false;
+        boolean passMatch = PasswordUtils.passwordsMatch(password0, u.getPassword());
+        if (!passMatch) {
+            return false;
+        }
+        String encryptPassword = PasswordUtils.generatePassword(password1);
         userMapper.updatePasswordByUserId(id, encryptPassword);
+        return true;
+    }
+
+    @Override
+    public void updateUserInfoByPrimaryKey(User user) {
+        userMapper.updateUserInfoByPrimaryKey(user);
+    }
+
+    @Override
+    public User findUserInfoByUsername(String username) {
+        return userMapper.selectUserInfoByUsername(username);
     }
 
 }

@@ -7,13 +7,13 @@
  */
 buildscript {
     repositories {
-        //maven {
-        //    url = "http://192.168.1.200:8081/repository/maven-public/"
-        //    credentials {
-        //        username 'admin'
-        //        password 'admin123'
-        //    }
-        //}
+        maven {
+            url = "http://192.168.1.200:8081/repository/maven-public/"
+            credentials {
+                username 'admin'
+                password 'admin123'
+            }
+        }
         maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
     }
     dependencies {
@@ -31,13 +31,13 @@ version = '0.0.1'
 group = 'org.cloud.ssm'
 
 repositories {
-    //maven {
-    //    url = "http://192.168.1.200:8081/repository/maven-public/"
-    //    credentials {
-    //        username 'admin'
-    //        password 'admin123'
-    //    }
-    //}
+    maven {
+        url = "http://192.168.1.200:8081/repository/maven-public/"
+        credentials {
+            username 'admin'
+            password 'admin123'
+        }
+    }
     maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
 }
 
@@ -66,11 +66,9 @@ dependencies {
     implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.2.13'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.2'
 
-    implementation 'org.jasypt:jasypt:1.9.3'
     implementation 'org.apache.commons:commons-lang3:3.10'
     implementation 'commons-fileupload:commons-fileupload:1.4'
     implementation 'com.alibaba:fastjson:1.2.68'
-    implementation 'com.auth0:java-jwt:3.10.3'
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation 'junit:junit:4.12'
