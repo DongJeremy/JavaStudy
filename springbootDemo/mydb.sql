@@ -1,229 +1,288 @@
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 12.3
--- Dumped by pg_dump version 12.3
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
-
---
--- Name: t_role; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.t_role (
-    id integer NOT NULL,
-    role_name character varying(50) NOT NULL,
-    role_card character varying(100) NOT NULL
-);
-
-
-ALTER TABLE public.t_role OWNER TO postgres;
-
---
--- Name: t_role_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.t_role_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.t_role_id_seq OWNER TO postgres;
-
---
--- Name: t_role_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.t_role_id_seq OWNED BY public.t_role.id;
-
-
---
--- Name: t_user; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.t_user (
-    id integer NOT NULL,
-    name character varying(50) NOT NULL,
-    phone character varying(15) NOT NULL,
-    username character varying(50) NOT NULL,
-    password character varying(200) NOT NULL,
-    age integer DEFAULT 1 NOT NULL
-);
-
-
-ALTER TABLE public.t_user OWNER TO postgres;
-
---
--- Name: t_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.t_user_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.t_user_id_seq OWNER TO postgres;
-
---
--- Name: t_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.t_user_id_seq OWNED BY public.t_user.id;
-
-
---
--- Name: t_user_role; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.t_user_role (
-    id integer NOT NULL,
-    users_id bigint NOT NULL,
-    role_id bigint NOT NULL
-);
-
-
-ALTER TABLE public.t_user_role OWNER TO postgres;
-
---
--- Name: t_user_role_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.t_user_role_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.t_user_role_id_seq OWNER TO postgres;
-
---
--- Name: t_user_role_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.t_user_role_id_seq OWNED BY public.t_user_role.id;
-
-
---
--- Name: t_role id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.t_role ALTER COLUMN id SET DEFAULT nextval('public.t_role_id_seq'::regclass);
-
-
---
--- Name: t_user id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.t_user ALTER COLUMN id SET DEFAULT nextval('public.t_user_id_seq'::regclass);
-
-
---
--- Name: t_user_role id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.t_user_role ALTER COLUMN id SET DEFAULT nextval('public.t_user_role_id_seq'::regclass);
-
-
---
--- Data for Name: t_role; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.t_role (id, role_name, role_card) FROM stdin;
-1	ROLE_MEMBER	ROLE_MEMBER
-2	ROLE_STOCK	ROLE_STOCK
-\.
-
-
---
--- Data for Name: t_user; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.t_user (id, name, phone, username, password, age) FROM stdin;
-1	admin	13844441234	admin	$2a$10$yjdybUK1yK7/xmLg1Z46QuBc4.Yb9vQXYnW6nHi48yXQxRNbJ5TDa	20
-\.
-
-
---
--- Data for Name: t_user_role; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.t_user_role (id, users_id, role_id) FROM stdin;
-2	1	1
-3	1	2
-\.
-
-
---
--- Name: t_role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.t_role_id_seq', 2, true);
-
-
---
--- Name: t_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.t_user_id_seq', 1, true);
-
-
---
--- Name: t_user_role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.t_user_role_id_seq', 3, true);
-
-
---
--- Name: t_role t_role_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.t_role
-    ADD CONSTRAINT t_role_pkey PRIMARY KEY (id);
-
-
---
--- Name: t_user t_user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.t_user
-    ADD CONSTRAINT t_user_pkey PRIMARY KEY (id);
-
-
---
--- Name: t_user_role t_user_role_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.t_user_role
-    ADD CONSTRAINT t_user_role_pkey PRIMARY KEY (id);
-
-
---
--- PostgreSQL database dump complete
---
-
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : 192.168.1.90
+ Source Server Type    : MySQL
+ Source Server Version : 100412
+ Source Host           : 192.168.1.90:3306
+ Source Schema         : mydb
+
+ Target Server Type    : MySQL
+ Target Server Version : 100412
+ File Encoding         : 65001
+
+ Date: 21/05/2020 18:30:38
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for sys_permissions
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_permissions`;
+CREATE TABLE `sys_permissions`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `permission` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `description` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_permissions
+-- ----------------------------
+INSERT INTO `sys_permissions` VALUES (1, 'user:create', '用户模块新增');
+INSERT INTO `sys_permissions` VALUES (2, 'user:update', '用户模块修改');
+INSERT INTO `sys_permissions` VALUES (3, 'user:select', '用户模块查询');
+INSERT INTO `sys_permissions` VALUES (4, 'user:delete', '用户模块删除');
+
+-- ----------------------------
+-- Table structure for sys_roles
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_roles`;
+CREATE TABLE `sys_roles`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `role` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `description` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_roles
+-- ----------------------------
+INSERT INTO `sys_roles` VALUES (1, 'admin', '管理员');
+INSERT INTO `sys_roles` VALUES (2, 'user', '用户管理员');
+
+-- ----------------------------
+-- Table structure for sys_roles_permissions
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_roles_permissions`;
+CREATE TABLE `sys_roles_permissions`  (
+  `role_id` bigint(20) NOT NULL,
+  `permission_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`role_id`, `permission_id`) USING BTREE,
+  INDEX `sys_roles_permissions_ibfk_2`(`permission_id`) USING BTREE,
+  CONSTRAINT `sys_roles_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `sys_roles` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `sys_roles_permissions_ibfk_2` FOREIGN KEY (`permission_id`) REFERENCES `sys_permissions` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_roles_permissions
+-- ----------------------------
+INSERT INTO `sys_roles_permissions` VALUES (1, 1);
+INSERT INTO `sys_roles_permissions` VALUES (1, 2);
+INSERT INTO `sys_roles_permissions` VALUES (1, 3);
+INSERT INTO `sys_roles_permissions` VALUES (1, 4);
+INSERT INTO `sys_roles_permissions` VALUES (2, 3);
+
+-- ----------------------------
+-- Table structure for sys_users
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_users`;
+CREATE TABLE `sys_users`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `username` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `nickname` varchar(150) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `sex` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `phone` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `password` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 0,
+  `email` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `last_login_time` timestamp(0) NOT NULL DEFAULT current_timestamp() ON UPDATE CURRENT_TIMESTAMP(0),
+  `create_time` datetime(0) DEFAULT NULL,
+  `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_users
+-- ----------------------------
+INSERT INTO `sys_users` VALUES (1, 'admin', 'admin', '1', '13588889854', '$shiro1$SHA-256$50000$tkXJB+7mQLtPhAKjnw630g==$TAWyEVOKaFZu9289OG0hvx9/kZ/X5HWvZkc3YcnEmkE=', 1, 'admin@cloud.org', '2020-04-13 17:00:29', '2019-06-21 22:21:05', '管理员');
+INSERT INTO `sys_users` VALUES (2, 'ddw', NULL, '2', NULL, '$shiro1$SHA-256$50000$jssZTPmF7UIbpgvW9iHoIQ==$GzI5SSfPbHmDd9vmZhDa2Jf5ZirDm0do31rxEqacDuk=', 1, 'ddw@cloud.org', '2020-04-10 15:00:01', '2019-06-21 22:21:07', NULL);
+
+-- ----------------------------
+-- Table structure for sys_users_roles
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_users_roles`;
+CREATE TABLE `sys_users_roles`  (
+  `user_id` bigint(20) NOT NULL,
+  `role_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`user_id`, `role_id`) USING BTREE,
+  INDEX `sys_users_roles_ibfk_2`(`role_id`) USING BTREE,
+  CONSTRAINT `sys_users_roles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `sys_users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `sys_users_roles_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `sys_roles` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_users_roles
+-- ----------------------------
+INSERT INTO `sys_users_roles` VALUES (1, 1);
+INSERT INTO `sys_users_roles` VALUES (1, 2);
+INSERT INTO `sys_users_roles` VALUES (2, 2);
+
+-- ----------------------------
+-- Table structure for t_dept
+-- ----------------------------
+DROP TABLE IF EXISTS `t_dept`;
+CREATE TABLE `t_dept`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `description` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of t_dept
+-- ----------------------------
+INSERT INTO `t_dept` VALUES (1, '第一开发部', 'dept01');
+INSERT INTO `t_dept` VALUES (2, '第二开发部', 'dept02');
+INSERT INTO `t_dept` VALUES (3, '第三开发部', 'dept03');
+INSERT INTO `t_dept` VALUES (4, '系统部', 'dept04');
+INSERT INTO `t_dept` VALUES (5, '管理部', 'dept05');
+
+-- ----------------------------
+-- Table structure for t_emp
+-- ----------------------------
+DROP TABLE IF EXISTS `t_emp`;
+CREATE TABLE `t_emp`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `address` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `age` int(11) NOT NULL,
+  `department` int(11) NOT NULL,
+  `salary` int(11) DEFAULT NULL,
+  `tel` varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `t_emp_ibfk_1`(`department`) USING BTREE,
+  CONSTRAINT `t_emp_ibfk_1` FOREIGN KEY (`department`) REFERENCES `t_dept` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 59 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of t_emp
+-- ----------------------------
+INSERT INTO `t_emp` VALUES (1, '宋江', '吉林', 43, 1, 40000, '13888883345');
+INSERT INTO `t_emp` VALUES (2, '卢俊义', '吉林', 42, 2, 20000, '13888883343');
+INSERT INTO `t_emp` VALUES (3, '吴用', '吉林', 41, 3, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (4, '公孙胜', '北京', 40, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (5, '关胜', '北京', 39, 2, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (6, '林冲', '北京', 38, 3, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (7, '秦明', '北京', 34, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (8, '呼延灼', '上海', 25, 2, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (9, '花荣', '上海', 24, 3, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (10, '柴进', '上海', 27, 1, 4500, '13888883345');
+INSERT INTO `t_emp` VALUES (11, '李应', '北京', 25, 2, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (12, '朱仝', '上海', 24, 3, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (13, '鲁智深', '上海', 27, 5, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (14, '武松', '上海', 29, 4, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (15, '董平', '上海', 24, 4, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (16, '张清', '山东', 33, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (18, '徐宁', '山东', 24, 3, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (19, '索超', '山东', 26, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (20, '戴宗', '成都', 25, 2, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (21, '刘唐', '成都', 24, 3, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (22, '李逵', '成都', 23, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (23, '史进', '成都', 25, 2, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (24, '穆弘', '成都', 24, 3, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (25, '雷横', '大连', 23, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (26, '李俊', '成都', 25, 2, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (27, '阮小二', '大连', 24, 3, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (28, '张横', '大连', 24, 3, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (29, '阮小五', '大连', 23, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (30, '张顺', '成都', 25, 2, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (31, '阮小七', '成都', 24, 3, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (32, '杨雄', '成都', 24, 3, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (33, '石秀', '大连', 23, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (34, '解珍', '大连', 25, 2, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (35, '解宝', '大连', 24, 5, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (36, '燕青', '大连', 24, 3, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (37, '宋江', '吉林', 43, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (38, '卢俊义', '吉林', 42, 1, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (39, '吴用', '吉林', 41, 1, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (40, '公孙胜', '北京', 40, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (41, '关胜', '北京', 39, 1, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (42, '林冲', '北京', 38, 1, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (43, '秦明', '北京', 34, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (44, '呼延灼', '上海', 25, 1, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (45, '花荣', '上海', 24, 1, 3000, '13888883348');
+INSERT INTO `t_emp` VALUES (46, 'sdafasf', 'asdfasf', 12, 1, 1222, '12312312123');
+INSERT INTO `t_emp` VALUES (47, '林彪', '北京', 23, 2, 100000, '18922239948');
+INSERT INTO `t_emp` VALUES (48, '宋江', '吉林', 43, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (49, '卢俊义', '吉林', 42, 2, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (50, '林彪', '北京', 23, 2, 100000, '18922239948');
+INSERT INTO `t_emp` VALUES (51, '宋江', '吉林', 43, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (52, '卢俊义', '吉林', 42, 2, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (53, '林彪', '北京', 23, 2, 100000, '18922239948');
+INSERT INTO `t_emp` VALUES (54, 'tom', 'us', 22, 3, 2000, '12312344422');
+INSERT INTO `t_emp` VALUES (55, '宋江', '吉林', 43, 1, 4000, '13888883345');
+INSERT INTO `t_emp` VALUES (56, '卢俊义', '吉林', 42, 2, 2000, '13888883343');
+INSERT INTO `t_emp` VALUES (57, '林彪', '北京', 23, 2, 100000, '18922239948');
+
+-- ----------------------------
+-- Table structure for t_employee
+-- ----------------------------
+DROP TABLE IF EXISTS `t_employee`;
+CREATE TABLE `t_employee`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `address` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `age` int(11) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of t_employee
+-- ----------------------------
+INSERT INTO `t_employee` VALUES (1, 'zhangsan', 'jilin', 23);
+INSERT INTO `t_employee` VALUES (2, 'lisi', 'beijing', 26);
+
+-- ----------------------------
+-- Table structure for t_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `t_menu`;
+CREATE TABLE `t_menu`  (
+  `menu_id` int(11) NOT NULL AUTO_INCREMENT,
+  `menu_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `url` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `icon` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `level` int(11) NOT NULL DEFAULT 1,
+  `parent_id` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`menu_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of t_menu
+-- ----------------------------
+INSERT INTO `t_menu` VALUES (1, '人事管理', '#', 'layui-icon layui-icon-picker-securityscan iconfont', 1, 0);
+INSERT INTO `t_menu` VALUES (2, '雇员管理', '/admin/empView', NULL, 1, 1);
+INSERT INTO `t_menu` VALUES (3, '部门管理', '/admin/deptView', NULL, 1, 1);
+INSERT INTO `t_menu` VALUES (4, '系统管理', '#', 'layui-icon layui-icon-picker-control iconfont ', 1, 0);
+INSERT INTO `t_menu` VALUES (5, '系统信息', '/admin/systemInfo', 'null', 1, 4);
+INSERT INTO `t_menu` VALUES (6, '在线用户', '/admin/userOnline', NULL, 1, 4);
+INSERT INTO `t_menu` VALUES (7, '操作日志', '/admin/syslog', NULL, 1, 4);
+INSERT INTO `t_menu` VALUES (8, '账户管理', '/admin/userView', NULL, 1, 4);
+
+-- ----------------------------
+-- Table structure for t_sys_log
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_log`;
+CREATE TABLE `t_sys_log`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '用户名',
+  `operation` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '操作',
+  `time` int(11) DEFAULT NULL COMMENT '响应时间/耗时',
+  `method` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '请求方法',
+  `params` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '请求参数',
+  `ip` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'IP',
+  `create_time` timestamp(0) NOT NULL DEFAULT current_timestamp() COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 431 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作日志表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of t_sys_log
+-- ----------------------------
+INSERT INTO `t_sys_log` VALUES (427, 'admin', '获取用户列表', 23, 'org.cloud.ssm.controller.page.EmployeePageController.empListView()', '  model: {departmentList=[第一开发部, 第二开发部, 第三开发部, 系统部, 管理部]}', '0:0:0:0:0:0:0:1', '2020-05-18 14:54:14');
+INSERT INTO `t_sys_log` VALUES (428, 'admin', '获取用户列表', 114, 'org.cloud.ssm.controller.page.EmployeePageController.empListView()', '  model: {departmentList=[第一开发部, 第二开发部, 第三开发部, 系统部, 管理部]}', '0:0:0:0:0:0:0:1', '2020-05-18 14:54:14');
+INSERT INTO `t_sys_log` VALUES (429, 'admin', '获取用户列表', 31, 'org.cloud.ssm.controller.api.UserController.listUser()', '  page: 1  limit: 10', '0:0:0:0:0:0:0:1', '2020-05-18 14:54:25');
+INSERT INTO `t_sys_log` VALUES (430, 'admin', '获取用户列表', 70, 'org.cloud.ssm.controller.api.UserController.listUser()', '  page: 1  limit: 10', '0:0:0:0:0:0:0:1', '2020-05-18 14:54:25');
+
+SET FOREIGN_KEY_CHECKS = 1;
