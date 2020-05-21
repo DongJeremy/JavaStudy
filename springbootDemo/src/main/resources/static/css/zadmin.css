@@ -362,6 +362,10 @@ a {
     height: 100%;
 }
 
+.timo-toolbar {
+    margin-top: 5px;
+}
+
 .user-info-page .user-info .user-avatar-box .edit-avatar {
     position: absolute;
     left: 0;

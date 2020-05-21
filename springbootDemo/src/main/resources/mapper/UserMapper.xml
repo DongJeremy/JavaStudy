@@ -8,11 +8,14 @@
     <result column="username" property="username" />
     <result column="password" property="password" />
     <result column="email" property="email" />
+    <result column="nickname" property="nickname" />
+    <result column="sex" property="sex" />
+    <result column="phone" property="phone" />
     <result column="status" property="status" />
+    <result column="remark" property="remark" />
     <result column="last_login_time" property="lastLoginTime" />
     <result column="create_time" property="createTime" />
-    <collection property="userRoles" column="user_id"
-      ofType="UserRole">
+    <collection property="userRoles" column="user_id" ofType="UserRole">
       <association column="role_id" property="role"
         javaType="Role">
         <id column="id" property="id"></id>
@@ -20,6 +23,17 @@
         <result column="description" property="description" />
       </association>
     </collection>
+  </resultMap>
+
+  <resultMap type="User" id="userInfoMap">
+    <id column="id" property="id"></id>
+    <result column="username" property="username" />
+    <result column="email" property="email" />
+    <result column="nickname" property="nickname" />
+    <result column="sex" property="sex" />
+    <result column="phone" property="phone" />
+    <result column="status" property="status" />
+    <result column="remark" property="remark" />
   </resultMap>
 
   <select id="selectAll" resultMap="userMap">
@@ -87,15 +101,38 @@
   <insert id="insert" useGeneratedKeys="true" keyProperty="id"
     parameterType="User">
     INSERT INTO `sys_users`
-    (username,password,email,status,last_login_time,create_time)
+    (username,password,nickname,sex,phone,email,status,last_login_time,remark,create_time)
     VALUES
-    (#{username},#{password},#{email},#{status},#{lastLoginTime},sysdate())
+    (#{username},#{password},#{nickname},#{sex},#{phone},#{email},#{status},#{lastLoginTime},#{remark},sysdate())
   </insert>
 
   <update id="updateStatusByPrimaryKey">
     UPDATE `sys_users`
     <set>
       status=#{status}
+    </set>
+    <where>
+      `sys_users`.id=#{id}
+    </where>
+  </update>
+
+  <select id="selectUserInfoByUsername" resultMap="userInfoMap">
+    SELECT
+      id, username, email, nickname, sex, phone, remark
+    FROM `sys_users`
+    <where>
+      username=#{username}
+    </where>
+  </select>
+
+  <update id="updateUserInfoByPrimaryKey" parameterType="User">
+    UPDATE `sys_users`
+    <set>
+      nickname=#{nickname},
+      sex=#{sex},
+      phone=#{phone},
+      email=#{email},
+      remark=#{remark}
     </set>
     <where>
       `sys_users`.id=#{id}

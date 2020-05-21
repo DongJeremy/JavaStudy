@@ -8,8 +8,12 @@ public class User implements Serializable {
     private static final long serialVersionUID = -5494356339737991298L;
     private Long id;
     private String username;
+    private String nickname;
+    private String sex;
+    private String phone;
     private String password;
     private String email;
+    private String remark;
     private Integer status;
     private Date lastLoginTime;
     private Date createTime;
@@ -42,6 +46,38 @@ public class User implements Serializable {
 
     public Date getLastLoginTime() {
         return lastLoginTime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public void setLastLoginTime(Date lastLoginTime) {
@@ -90,6 +126,6 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User [username=" + username + ", password=" + password + "]";
+        return "User [username=" + username + ", nickname=" + nickname + ", password=" + password + "]";
     }
 }

@@ -39,6 +39,7 @@
             </div>
           </div>
           <div class="btn-group-right">
+            <div class="timo-toolbar">
               <button class="layui-btn open-popup" id="add_btn">
                 <i class="fa fa-plus"></i> 添加
               </button>
@@ -51,6 +52,7 @@
               <button class="layui-btn open-popup" id="export_btn">
                 <i class="layui-icon">&#xe67d;</i> 导出
               </button>
+            </div>
           </div>
         </div>
       </div>
@@ -59,14 +61,12 @@
       </div>
     </div>
   </div>
-
   <script type="text/html" id="column-toolbar">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="info">详细</a>
     <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
   </script>
-
   <th:block th:include="admin/common/public::footer" />
-
   <script>
     layui.use([ 'table', 'element', 'form' ], function() {
         var table = layui.table
@@ -94,7 +94,6 @@
             ]
         ]
     });
-
     upload.render({
         elem: '#import_btn' //绑定元素
         ,url: '/admin/empImport' //上传接口
@@ -175,7 +174,6 @@
         window.location.href="/admin/empView/excel/download";
         return false;
     });
-
     // 行点击事件
     table.on('tool', function (obj) {
         var data = obj.data;
@@ -188,7 +186,6 @@
             del(obj);
         }
     });
-
     function edit(id) {
         layer.open({
             content: '/admin/empChangeView/' + id,
@@ -202,10 +199,9 @@
             }
         });
     }
-
     function info(id) {
         layer.open({
-            content: '<%=basePath%>admin/empDetailsView/' + id,
+            content: '/admin/empDetailsView/' + id,
             title: "详细信息",
             area: ['700px', '400px'],
             type: 2,
