@@ -12,14 +12,16 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.cloud.ssm.common.security.ShiroDbRealm;
-import org.crazycake.shiro.RedisCacheManager;
-import org.crazycake.shiro.RedisManager;
-import org.crazycake.shiro.RedisSessionDAO;
+import org.iherus.shiro.cache.redis.RedisCacheManager;
+import org.iherus.shiro.cache.redis.RedisSessionDAO;
+import org.iherus.shiro.cache.redis.config.RedisStandaloneConfiguration;
+import org.iherus.shiro.cache.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
 public class ShiroConfig {
@@ -29,6 +31,15 @@ public class ShiroConfig {
 
     @Value("${spring.redis.port}")
     private Integer redisPort;
+
+    @Value("${spring.redis.jedis.pool.maxActive}")
+    private Integer maxTotal;
+
+    @Value("${spring.redis.jedis.pool.maxIdle}")
+    private Integer maxIdle;
+
+    @Value("${spring.redis.jedis.pool.maxWait}")
+    private Integer maxWaitMillis;
 
     /**
      * 注入自定义的realm，告诉shiro如何获取用户信息来做登录或权限控制
@@ -124,26 +135,50 @@ public class ShiroConfig {
     @Bean
     public RedisCacheManager redisCacheManager() {
         RedisCacheManager redisCacheManager = new RedisCacheManager();
-        redisCacheManager.setRedisManager(redisManager());
-        redisCacheManager.setExpire(600);
-        redisCacheManager.setPrincipalIdFieldName("id");
+        redisCacheManager.setConnectionFactory(connectionFactory());
+        redisCacheManager.setDatabase(2);
+        redisCacheManager.setExpirationMillis(90000);
+        redisCacheManager.setKeyPrefix("shiro:cache:");
+        redisCacheManager.setScanBatchSize(3000);
+        redisCacheManager.setDeleteBatchSize(5000);
+        redisCacheManager.setFetchBatchSize(50);
         return redisCacheManager;
+    }
+
+    @Bean
+    public JedisConnectionFactory connectionFactory() {
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+        jedisConnectionFactory.setClientName("SRC");
+        jedisConnectionFactory.setConnectTimeoutMillis(3000);
+        jedisConnectionFactory.setSoTimeoutMillis(2000);
+        jedisConnectionFactory.setPoolConfig(jedisPoolConfig());
+        jedisConnectionFactory.setConfiguration(standaloneConfiguration());
+        return jedisConnectionFactory;
+    }
+
+    @Bean
+    public JedisPoolConfig jedisPoolConfig() {
+        JedisPoolConfig config = new JedisPoolConfig();
+        config.setMaxTotal(maxTotal);
+        config.setMaxIdle(maxIdle);
+        config.setMaxWaitMillis(maxWaitMillis * 1000);
+        return config;
+    }
+
+    @Bean
+    public RedisStandaloneConfiguration standaloneConfiguration() {
+        RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration();
+        standaloneConfiguration.setHost(redisHost);
+        standaloneConfiguration.setPort(redisPort);
+        standaloneConfiguration.setDatabase(0);
+        return standaloneConfiguration;
     }
 
     @Bean
     public RedisSessionDAO redisSessionDAO() {
         RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
-        redisSessionDAO.setExpire(1800);
-        redisSessionDAO.setRedisManager(redisManager());
-        redisSessionDAO.setSessionInMemoryEnabled(false);
+        redisSessionDAO.setCacheManager(redisCacheManager());
         return redisSessionDAO;
-    }
-
-    @Bean
-    public RedisManager redisManager() {
-        RedisManager redisManager = new RedisManager();
-        redisManager.setHost(redisHost + ":" + redisPort);
-        return redisManager;
     }
 
     @Bean

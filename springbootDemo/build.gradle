@@ -36,7 +36,7 @@ repositories {
     //maven {
     //    url = "http://192.168.1.200:8081/repository/maven-public/"
     //    credentials {
-    //        username 'admin'
+    //       username 'admin'
     //        password 'admin123'
     //    }
     //}
@@ -62,23 +62,28 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-aop"
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
-    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.apache.logging.log4j:log4j-web:2.12.1'
+    implementation 'redis.clients:jedis:3.2.0'
 
     implementation 'org.apache.shiro:shiro-spring-boot-web-starter:1.5.3'
-    implementation 'org.crazycake:shiro-redis:3.2.3'
+    implementation 'org.iherus.shiro:shiro-redis:2.2.0'
     implementation 'com.github.theborakompanioni:thymeleaf-extras-shiro:2.0.0'
+
+    // mybatis
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.2'
+
+    // pagehelper
     implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.2.13'
 
     implementation 'mysql:mysql-connector-java:5.1.49'
     //implementation 'org.postgresql:postgresql:42.2.12'
     implementation 'org.apache.commons:commons-lang3:3.10'
     implementation 'commons-fileupload:commons-fileupload:1.4'
+
+    // system info
     implementation 'com.github.oshi:oshi-core:5.0.2'
-    
     implementation 'net.java.dev.jna:jna:5.5.0'
     implementation 'net.java.dev.jna:jna-platform:5.5.0'
 
@@ -98,10 +103,7 @@ dependencies {
     implementation 'org.webjars:bootstrap:3.4.1'
     implementation 'org.webjars:echarts:4.6.0'
 
+    // test
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation 'junit:junit:4.12'
-}
-
-configurations {
-    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
 }
