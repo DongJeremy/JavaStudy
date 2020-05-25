@@ -35,7 +35,8 @@
     </encoder>
   </appender>
   <!-- 日志输出级别 -->
-  <root level="INFO">
+  <logger name="org.springframework.data.mybatis" level="DEBUG"/>
+  <root level="DEBUG">
     <appender-ref ref="STDOUT_COLOR" />
   </root>
 </configuration>

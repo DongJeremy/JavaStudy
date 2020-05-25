@@ -65,11 +65,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'redis.clients:jedis:3.2.0'
-
-    implementation 'org.apache.shiro:shiro-spring-boot-web-starter:1.5.3'
-    implementation 'org.iherus.shiro:shiro-redis:2.2.0'
-    implementation 'com.github.theborakompanioni:thymeleaf-extras-shiro:2.0.0'
+    implementation "org.springframework.boot:spring-boot-starter-security"
 
     // mybatis
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.2'
@@ -77,10 +73,14 @@ dependencies {
     // pagehelper
     implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.2.13'
 
+    // tools
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'com.alibaba:fastjson:1.2.68'
     implementation 'mysql:mysql-connector-java:5.1.49'
     //implementation 'org.postgresql:postgresql:42.2.12'
     implementation 'org.apache.commons:commons-lang3:3.10'
     implementation 'commons-fileupload:commons-fileupload:1.4'
+    implementation 'javax.xml.bind:jaxb-api:2.3.0'
 
     // system info
     implementation 'com.github.oshi:oshi-core:5.0.2'

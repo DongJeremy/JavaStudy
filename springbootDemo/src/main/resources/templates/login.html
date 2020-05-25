@@ -20,7 +20,7 @@
     <h1 class="login-box-title">
       <i class="fa fa-fw fa-user"></i>登录
     </h1>
-    <form class="layui-form">
+    <form class="layui-form" method='POST' action="login">
       <div class="layui-form-item">
         <label class="layui-icon layui-icon-username" for="username"></label> <input class="layui-input" type="text"
           name="username" id="username" placeholder="用户名" lay-verify="required" lay-vertype="tips">
@@ -69,7 +69,9 @@
                     var form = layui.form;
                     form.on('submit(login)', function(data) {
                         $.post('login', data.field, function(result) {
-                            handlerResult(result, loginDone);
+                            console.log(result);
+                            //handlerResult(result, loginDone);
+                            location.href = 'admin/main';
                         });
                         return false;
                     });
@@ -85,7 +87,7 @@
                     icon : 1,
                     time : 500
                 }, function() {
-                    location.href = 'main';
+                    location.href = 'admin/main';
                 });
             }
         </script>

@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 
 import javax.annotation.Resource;
 
-import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,7 +13,6 @@ import org.cloud.ssm.common.annotation.OperationLog;
 import org.cloud.ssm.common.util.IPUtils;
 import org.cloud.ssm.system.mapper.SysLogMapper;
 import org.cloud.ssm.system.model.SysLog;
-import org.cloud.ssm.system.model.User;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
@@ -84,12 +82,6 @@ public class OperationLogAspect {
         }
 
         sysLog.setIp(IPUtils.getIpAddr());
-
-        // 获取当前登录用户名
-        if (SecurityUtils.getSubject().isAuthenticated()) {
-            User user = (User) SecurityUtils.getSubject().getPrincipal();
-            sysLog.setUsername(user.getUsername());
-        }
 
         sysLog.setTime((int) time);
         sysLogMapper.insert(sysLog);

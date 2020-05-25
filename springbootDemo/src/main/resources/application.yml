@@ -58,4 +58,4 @@ logging:
     classpath:logback-spring.xml
   level:
     org.springframework.beans: WARN
-    root: INFO
+    root: DEBUG

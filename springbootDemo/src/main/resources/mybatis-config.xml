@@ -9,10 +9,10 @@
     <typeAlias type="org.cloud.ssm.system.model.Employee" alias="Employee" />
     <typeAlias type="org.cloud.ssm.system.model.Department" alias="Department" />
     <typeAlias type="org.cloud.ssm.system.model.Menu" alias="Menu" />
-    <typeAlias type="org.cloud.ssm.system.model.Permission" alias="Permission" />
-    <typeAlias type="org.cloud.ssm.system.model.Role" alias="Role" />
-    <typeAlias type="org.cloud.ssm.system.model.User" alias="User" />
     <typeAlias type="org.cloud.ssm.system.model.SysLog" alias="SysLog" />
+    <typeAlias type="org.cloud.ssm.common.domain.Permission" alias="Permission" />
+    <typeAlias type="org.cloud.ssm.common.domain.Role" alias="Role" />
+    <typeAlias type="org.cloud.ssm.common.domain.SysUser" alias="SysUser" />
   </typeAliases>
 
 </configuration>
