@@ -28,9 +28,9 @@
       B.url AS url2,
       B.icon AS icon2
     FROM
-      (SELECT * FROM `t_menu` WHERE parent_id=0) AS A
+      (SELECT * FROM t_menu WHERE parent_id=0) AS A
     INNER JOIN
-      (SELECT * FROM `t_menu` WHERE parent_id in (SELECT menu_id FROM `t_menu` WHERE parent_id=0)) AS B 
+      (SELECT * FROM t_menu WHERE parent_id in (SELECT menu_id FROM t_menu WHERE parent_id=0)) AS B 
     ON A.menu_id=B.parent_id AND B.level &lt;= #{level}
     ORDER BY A.menu_id,B.menu_id
   </select>

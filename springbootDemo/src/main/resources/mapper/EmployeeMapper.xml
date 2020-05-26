@@ -31,8 +31,8 @@
     SELECT 
     <include refid="selectColumns"/>
     FROM 
-      `t_emp` A
-    LEFT OUTER JOIN `t_dept` B ON A.department=B.id
+      t_emp A
+    LEFT OUTER JOIN t_dept B ON A.department=B.id
     ORDER BY A.id
   </select>
 
@@ -40,8 +40,8 @@
     SELECT
     <include refid="selectColumns"/>
     FROM 
-      `t_emp` A 
-    LEFT OUTER JOIN `t_dept` B ON A.department=B.id
+      t_emp A 
+    LEFT OUTER JOIN t_dept B ON A.department=B.id
     <where>
       1=1
       <if test="name != null and name != ''">
@@ -57,7 +57,7 @@
   <select id="selectCountByCondition" resultType="long">
     SELECT count(*)
     FROM 
-      `t_emp` A 
+      t_emp A 
     <where>
       1=1
       <if test="name != null and name != ''">
@@ -71,20 +71,20 @@
 
   <delete id="deleteByPrimaryKey" parameterType="long">
     DELETE FROM
-      `t_emp` 
-    WHERE `t_emp`.id=#{id}
+      t_emp 
+    WHERE t_emp.id=#{id}
   </delete>
 
   <insert id="insert" parameterType="Employee">
-    INSERT INTO `t_emp` (id,name,address,age,department,salary,tel)
-    VALUES (NULL,#{name},#{address},#{age},#{department.id},#{salary},#{tel})
+    INSERT INTO t_emp (id,name,address,age,department,salary,tel)
+    VALUES (default,#{name},#{address},#{age},#{department.id},#{salary},#{tel})
   </insert>
 
   <select id="selectByPrimaryKey" resultMap="employeeMap">
     SELECT
     <include refid="selectColumns"/>
-    FROM `t_emp` A
-    LEFT OUTER JOIN `t_dept` B ON A.department=B.id
+    FROM t_emp A
+    LEFT OUTER JOIN t_dept B ON A.department=B.id
     <where>
       A.id=#{id}
     </where>
@@ -94,12 +94,12 @@
     SELECT 
       count(*)
     FROM 
-      `t_emp`
+      t_emp
   </select>
 
   <update id="updateByPrimaryKey" parameterType="Employee">
     UPDATE
-      `t_emp`
+      t_emp
     <set>
       <if test="name != null">
         name = #{name},

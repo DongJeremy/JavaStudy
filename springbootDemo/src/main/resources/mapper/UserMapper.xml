@@ -15,6 +15,7 @@
     <result column="birthday" property="birthday" />
     <result column="sex" property="sex" />
     <result column="status" property="status" />
+    <result column="intro" property="intro" />
     <result column="createTime" property="createTime" />
     <result column="updateTime" property="updateTime" />
   </resultMap>
@@ -39,7 +40,7 @@
     SELECT 
     <include refid="selectColumns"/>
     FROM 
-      `sys_user` A
+      sys_user A
     ORDER BY A.id
   </select>
 
@@ -47,7 +48,7 @@
     SELECT
     <include refid="selectColumns"/>
     FROM 
-      `sys_user` A 
+      sys_user A 
     <where>
       1=1
       <if test="name != null and name != ''">
@@ -60,7 +61,7 @@
   <select id="selectCountByCondition" resultType="long">
     SELECT count(*)
     FROM 
-      `sys_user` A 
+      sys_user A 
     <where>
       1=1
       <if test="name != null and name != ''">
@@ -71,8 +72,8 @@
 
   <delete id="deleteByPrimaryKey" parameterType="long">
     DELETE FROM
-      `sys_user` 
-    WHERE `sys_user`.id=#{id}
+      sys_user 
+    WHERE sys_user.id=#{id}
   </delete>
 
   <insert id="insert" parameterType="SysUser">
@@ -80,14 +81,14 @@
       id, username, password, nickname, headImgUrl, phone, telephone, email, birthday, sex, 
       status, createTime, updateTime)
     VALUES (
-      NULL,#{username}, #{password}, #{nickname}, #{headImgUrl}, #{phone}, #{telephone}, #{email}, #{birthday}, #{sex}, 
+      default,#{username}, #{password}, #{nickname}, #{headImgUrl}, #{phone}, #{telephone}, #{email}, #{birthday}, #{sex}, 
       #{status}, now(), now())
   </insert>
 
   <select id="selectByPrimaryKey" resultMap="myUserMap">
     SELECT
     <include refid="selectColumns"/>
-    FROM `sys_user` A
+    FROM sys_user A
     <where>
       A.id=#{id}
     </where>
@@ -96,7 +97,7 @@
   <select id="selectByUser" resultMap="myUserMap">
     SELECT
     <include refid="selectColumns"/>
-    FROM `sys_user` A
+    FROM sys_user A
     <where>
       A.username=#{username}
     </where>
@@ -104,12 +105,12 @@
 
   <update id="changePassword">
     UPDATE
-      `sys_user`
+      sys_user
     <set>
       password = #{password},
     </set>
     <where>
-      `sys_user`.id=#{id}
+      sys_user.id=#{id}
     </where>
   </update>
 
@@ -117,7 +118,7 @@
     SELECT 
       count(*)
     FROM 
-      `sys_user`
+      sys_user
   </select>
 
   <update id="updateByPrimaryKey" parameterType="SysUser">
@@ -193,4 +194,13 @@
       sys_role_user
     WHERE userId = #{userId}
   </delete>
+
+  <select id="selectUserInfoByUsername" resultMap="myUserMap">
+    SELECT
+      id, username, email, nickname, sex, phone, intro
+    FROM sys_user
+    <where>
+      username=#{username}
+    </where>
+  </select>
 </mapper>

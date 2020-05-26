@@ -23,4 +23,6 @@ public interface UserMapper extends BaseMapper<SysUser> {
     int deleteUserRole(@Param("userId") Long userId);
 
     int saveUserRoles(@Param("userId") Long userId, @Param("roleIds") List<Long> roleIds);
+
+    SysUser selectUserInfoByUsername(@Param("username") String username);
 }

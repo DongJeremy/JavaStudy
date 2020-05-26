@@ -11,40 +11,40 @@
 
   <select id="selectAll" resultMap="departmentMap">
     SELECT *
-    FROM `t_dept`
+    FROM t_dept
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="long">
     DELETE FROM
-    `t_dept` WHERE `t_dept`.id=#{id}
+    t_dept WHERE t_dept.id=#{id}
   </delete>
 
   <insert id="insert" parameterType="Department">
-    INSERT INTO `t_dept` (id,name,description)
-    VALUES (NULL,#{name},#{description})
+    INSERT INTO t_dept (id,name,description)
+    VALUES (default,#{name},#{description})
   </insert>
   
   <select id="selectByPrimaryKey" resultMap="departmentMap">
     SELECT *
-    FROM `t_dept`
-    WHERE `t_dept`.id=#{id}
+    FROM t_dept
+    WHERE t_dept.id=#{id}
   </select>
   
   <select id="selectCount" resultType="long">
     SELECT count(*)
-    FROM `t_dept`
+    FROM t_dept
   </select>
 
   <update id="updateByPrimaryKey" parameterType="Department">
     UPDATE
-      `t_dept`
+      t_dept
     <set>
       <if test="name != null">
         name = #{name},
       </if>
         description = #{description}
     </set>
-    WHERE `t_dept`.id=#{id}
+    WHERE t_dept.id=#{id}
   </update>
 
 </mapper>

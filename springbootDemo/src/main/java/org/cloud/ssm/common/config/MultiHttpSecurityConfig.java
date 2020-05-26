@@ -63,7 +63,7 @@ public class MultiHttpSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // @formatter:off
         protected void configure(HttpSecurity http) throws Exception {
-            http.csrf().disable().antMatcher("/api/**").authorizeRequests().antMatchers("/api/v1/user/signup")
+            http.csrf().disable().antMatcher("/api/v1/**").authorizeRequests().antMatchers("/api/v1/user/signup")
                     .permitAll().anyRequest().authenticated().and().exceptionHandling()
                     .authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and()
                     .addFilter(new ApiJWTAuthenticationFilter(authenticationManager()))
@@ -121,14 +121,17 @@ public class MultiHttpSecurityConfig extends WebSecurityConfigurerAdapter {
             http.csrf().disable()
                 .authorizeRequests(authorize -> authorize
                     .mvcMatchers("/webjars/**", "/static/**", "/login").permitAll()
-                    .mvcMatchers("/admin/**").access("hasRole('ADMIN') or hasRole('USER')")
+                    .mvcMatchers("/admin/**", "/api/**").access("hasRole('ADMIN') or hasRole('USER')")
                     .anyRequest().denyAll()
                 );
             http.formLogin().loginPage("/login").loginProcessingUrl("/login").successForwardUrl("/admin/main")
                     .and().csrf().requireCsrfProtectionMatcher(new RestRequestMatcher()).and()
-                    .logout().permitAll().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessHandler(new CustomLogoutSuccessHandler()).deleteCookies("JSESSIONID")
+                    .logout().permitAll()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .logoutSuccessUrl("/login").and().exceptionHandling();
+            // 解决不允许显示在iframe的问题
+            http.headers().frameOptions().disable();
+            http.headers().cacheControl();
         }
         
         private class RestRequestMatcher implements RequestMatcher {

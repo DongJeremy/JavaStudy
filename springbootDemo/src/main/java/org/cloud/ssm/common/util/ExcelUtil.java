@@ -34,7 +34,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.cloud.ssm.common.aop.ExcelInfo;
 import org.springframework.web.multipart.MultipartFile;
 
-public class ExcelUtils<T> {
+public class ExcelUtil<T> {
 
     private static final String TITLE_FONT_TYPE = "Arial Unicode MS";
     private static final short TITLE_FONT_SIZE = 12;

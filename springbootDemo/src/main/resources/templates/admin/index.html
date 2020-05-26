@@ -112,9 +112,10 @@
             function logout() {
                 sessionStorage.removeItem("tabs");
                 sessionStorage.removeItem("currentTabId");
-                $.post('/admin/logout', function(result) {
+                $.post('/logout', function(result) {
+                    window.location.href = '/login';
                     if (result.code == 0) {
-                        window.location.href = '/admin/login';
+                        
                     }
                 }, 'json');
             }

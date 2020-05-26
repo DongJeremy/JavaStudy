@@ -11,7 +11,6 @@ import org.cloud.ssm.common.util.UserUtil;
 import org.cloud.ssm.system.info.Server;
 import org.cloud.ssm.system.service.IMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -29,7 +28,6 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasAuthority('sys:user:list')")
     @GetMapping(value = { "/", "/main" })
     public String index(ModelMap model) {
         model.addAttribute("menus", service.getTreeData(5));
@@ -85,7 +83,7 @@ public class AdminController {
     @GetMapping("/userInfo")
     public String toUserInfo(Model model) {
         LoginUser user = UserUtil.getLoginUser();
-        //model.addAttribute("user", userService.findUserInfoByUsername(user.getUsername()));
+        model.addAttribute("user", userService.findUserInfoByUsername(user.getUsername()));
         return "admin/user/user-info";
     }
 

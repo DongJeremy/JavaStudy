@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.cloud.ssm.common.annotation.OperationLog;
-import org.cloud.ssm.common.util.ExcelUtils;
+import org.cloud.ssm.common.util.ExcelUtil;
 import org.cloud.ssm.common.util.MapperUtils;
 import org.cloud.ssm.common.util.ResultBean;
 import org.cloud.ssm.system.model.Employee;
@@ -75,14 +75,14 @@ public class EmployeePageController {
         final List<Employee> list = employeeService.getAll();
         List<EmployeeVO> voList = MapperUtils.map(mapper, list, EmployeeVO.class);
         logger.info("download excel file to local.");
-        ExcelUtils.exportToFile(voList, excelFileName, response);
+        ExcelUtil.exportToFile(voList, excelFileName, response);
     }
 
     @PostMapping("/empImport")
     public @ResponseBody ResultBean importEmployee(HttpServletRequest request) throws IOException, Exception {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultipartFile file = multipartRequest.getFile("file");
-        final List<EmployeeVO> listObjects = ExcelUtils.importFromFile(file, EmployeeVO.class);
+        final List<EmployeeVO> listObjects = ExcelUtil.importFromFile(file, EmployeeVO.class);
         List<Employee> employeeList = MapperUtils.map(mapper, listObjects, Employee.class);
         long ret = employeeService.batchSaveEmployee(employeeList);
         if (ret == 1L) {

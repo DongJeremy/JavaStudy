@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cloud.ssm.common.domain.Permission;
+import org.cloud.ssm.common.domain.Role;
 import org.cloud.ssm.common.domain.SysUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,11 +19,20 @@ public class LoginUser extends SysUser implements UserDetails {
     private static final long serialVersionUID = -1379274258881257107L;
 
     private List<Permission> permissions;
+    private List<Role> roles;
     private String token;
     /** 登陆时间戳（毫秒） */
     private Long loginTime;
     /** 过期时间戳 */
     private Long expireTime;
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
 
     public List<Permission> getPermissions() {
         return permissions;
@@ -43,8 +53,8 @@ public class LoginUser extends SysUser implements UserDetails {
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return permissions.parallelStream().filter(p -> !StringUtils.isEmpty(p.getPermission()))
-                .map(p -> new SimpleGrantedAuthority(p.getPermission())).collect(Collectors.toSet());
+        return roles.parallelStream().filter(p -> !StringUtils.isEmpty(p.getName()))
+                .map(p -> new SimpleGrantedAuthority(p.getName())).collect(Collectors.toSet());
     }
 
     public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {

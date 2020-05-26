@@ -11,10 +11,10 @@ spring:
   mvc:
     static-path-pattern: /**
   datasource:
-    url: jdbc:mysql://192.168.1.90:3306/mydb?useSSL=false&characterEncoding=UTF8
-    username: cloud
-    password: passwd
-    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:postgresql://192.168.1.90:5432/postgres?useUnicode=true&characterEncoding=utf8
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       minimum-idle: 5
@@ -25,16 +25,6 @@ spring:
       max-lifetime: 1800000
       connection-timeout: 30000
       connection-test-query: SELECT 1
-  redis:
-    host: 192.168.1.90
-    port: 6379
-    jedis:
-      pool:
-        minIdle: 1
-        maxIdle: 10
-        maxWait: 3
-        maxActive: 8
-    timeout: 0
   thymeleaf:
     mode: HTML
     suffix: .html
@@ -44,7 +34,7 @@ spring:
     servlet:
       content-type: text/html
 pagehelper:
-  helperDialect: mysql
+  helperDialect: postgresql
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
@@ -58,4 +48,4 @@ logging:
     classpath:logback-spring.xml
   level:
     org.springframework.beans: WARN
-    root: DEBUG
+    root: INFO
