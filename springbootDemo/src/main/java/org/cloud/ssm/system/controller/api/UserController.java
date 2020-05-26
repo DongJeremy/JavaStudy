@@ -70,6 +70,14 @@ public class UserController {
         return ResultBean.success();
     }
 
+    @PostMapping("/userInfo")
+    @ResponseBody
+    public ResultBean userInfo(@RequestBody SysUser user){
+        // 保存数据
+        userService.updateUserInfoByPrimaryKey(user);
+        return ResultBean.success();
+    }
+
     @OperationLog("刪除用户")
     @DeleteMapping("/{id}")
     @ResponseBody

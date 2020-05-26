@@ -11,8 +11,8 @@ spring:
   mvc:
     static-path-pattern: /**
   datasource:
-    url: jdbc:postgresql://192.168.1.90:5432/postgres?useUnicode=true&characterEncoding=utf8
-    username: postgres
+    url: jdbc:postgresql://192.168.1.90:5432/mydb?useUnicode=true&characterEncoding=utf8
+    username: admin
     password: password
     driver-class-name: org.postgresql.Driver
     type: com.zaxxer.hikari.HikariDataSource

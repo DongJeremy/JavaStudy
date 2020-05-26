@@ -203,4 +203,28 @@
       username=#{username}
     </where>
   </select>
+
+  <update id="updateUserInfoByPrimaryKey" parameterType="SysUser">
+    UPDATE sys_user
+    <set>
+      nickname=#{nickname},
+      sex=#{sex},
+      phone=#{phone},
+      email=#{email},
+      intro=#{intro}
+    </set>
+    <where>
+      sys_user.id=#{id}
+    </where>
+  </update>
+
+  <update id="updatePasswordByUserId">
+    UPDATE sys_user
+    <set>
+      password = #{password},
+    </set>
+    <where>
+      sys_user.id=#{id}
+    </where>
+  </update>
 </mapper>

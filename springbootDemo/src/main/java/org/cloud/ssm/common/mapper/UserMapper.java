@@ -25,4 +25,8 @@ public interface UserMapper extends BaseMapper<SysUser> {
     int saveUserRoles(@Param("userId") Long userId, @Param("roleIds") List<Long> roleIds);
 
     SysUser selectUserInfoByUsername(@Param("username") String username);
+
+    void updateUserInfoByPrimaryKey(SysUser user);
+
+    void updatePasswordByUserId(@Param("id") Long id, @Param("password") String encryptPassword);
 }

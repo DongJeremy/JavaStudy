@@ -13,6 +13,7 @@ import org.cloud.ssm.common.security.form.CustomLogoutSuccessHandler;
 import org.cloud.ssm.common.security.form.FormBasedJWTAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -24,10 +25,17 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
+import org.springframework.security.web.session.ConcurrentSessionFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
+import org.springframework.security.web.session.SimpleRedirectSessionInformationExpiredStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -112,28 +120,47 @@ public class MultiHttpSecurityConfig extends WebSecurityConfigurerAdapter {
             authFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler);
             authFilter.setUsernameParameter("username");
             authFilter.setPasswordParameter("password");
+            authFilter.setSessionAuthenticationStrategy(
+                    new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry()));
             return authFilter;
+        }
+
+        @Bean
+        public SessionRegistry sessionRegistry() {
+            return new SessionRegistryImpl();
+        }
+        
+        @Bean
+        public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
+            return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(new HttpSessionEventPublisher());
         }
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.addFilterAfter(customAuthenticationFilter(), LogoutFilter.class);
             http.csrf().disable()
-                .authorizeRequests(authorize -> authorize
-                    .mvcMatchers("/webjars/**", "/static/**", "/login").permitAll()
-                    .mvcMatchers("/admin/**", "/api/**").access("hasRole('ADMIN') or hasRole('USER')")
-                    .anyRequest().denyAll()
-                );
-            http.formLogin().loginPage("/login").loginProcessingUrl("/login").successForwardUrl("/admin/main")
-                    .and().csrf().requireCsrfProtectionMatcher(new RestRequestMatcher()).and()
-                    .logout().permitAll()
+                    .authorizeRequests(authorize -> authorize.mvcMatchers("/webjars/**", "/static/**", "/login")
+                            .permitAll().mvcMatchers("/admin/**", "/api/**")
+                            .access("hasRole('ADMIN') or hasRole('USER')").anyRequest().denyAll());
+            // session并发控制过滤器
+            http.addFilterAt(new ConcurrentSessionFilter(sessionRegistry(), sessionInformationExpiredStrategy()),
+                    ConcurrentSessionFilter.class);
+            http.formLogin().loginPage("/login").loginProcessingUrl("/login").successForwardUrl("/admin/main").and()
+                    .csrf().requireCsrfProtectionMatcher(new RestRequestMatcher()).and().logout().permitAll()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutSuccessHandler(new CustomLogoutSuccessHandler()).deleteCookies("JSESSIONID")
                     .logoutSuccessUrl("/login").and().exceptionHandling();
+            http.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());
             // 解决不允许显示在iframe的问题
             http.headers().frameOptions().disable();
             http.headers().cacheControl();
         }
-        
+
+        // session失效跳转
+        private SessionInformationExpiredStrategy sessionInformationExpiredStrategy() {
+            return new SimpleRedirectSessionInformationExpiredStrategy("/login");
+        }
+
         private class RestRequestMatcher implements RequestMatcher {
             private Pattern allowedMethods = Pattern.compile("^(GET|POST|PUT|PATCH|DELETE)$");
             private RegexRequestMatcher apiMatcher = new RegexRequestMatcher("/v[0-9]*/.*", null);

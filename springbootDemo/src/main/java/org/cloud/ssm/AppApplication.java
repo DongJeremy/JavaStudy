@@ -6,10 +6,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class App {
+public class AppApplication {
     private final static Logger logger = LoggerFactory.getLogger("o.c.s.Main");
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(App.class);
+        SpringApplication application = new SpringApplication(AppApplication.class);
         application.run(args);
         logger.info("============= SpringBoot Start Success =============");
     }

@@ -114,10 +114,7 @@
                 sessionStorage.removeItem("currentTabId");
                 $.post('/logout', function(result) {
                     window.location.href = '/login';
-                    if (result.code == 0) {
-                        
-                    }
-                }, 'json');
+                });
             }
         </script>
 </body>
