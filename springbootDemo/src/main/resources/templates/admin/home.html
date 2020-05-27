@@ -85,10 +85,10 @@
   <script th:src="@{/webjars/echarts/echarts.min.js}"></script>
   <script type="application/javascript">
         layui.use('element', function(){
-            layui.$("#main").css("width", (window.innerWidth - 100) +'px');
-         	// 基于准备好的dom，初始化echarts实例
+            // 基于准备好的dom，初始化echarts实例
             var myChart = echarts.init(document.getElementById('main'));
-         	// 指定图表的配置项和数据
+            //window.onresize = myChart.resize;
+            // 指定图表的配置项和数据
             option = {
                 title: {
                 	text: '近七天登陆次数统计图',
@@ -113,9 +113,12 @@
                 }]
             };
             layui.$.get('/admin/weekLoginCount', function (data) {
-            	option.series[0].data = data;
+                option.series[0].data = data;
                 // 使用刚指定的配置项和数据显示图表。
                 myChart.setOption(option);
+                $(window).resize(function() {
+                    myChart.resize();
+                });
             });
         });
   </script>
